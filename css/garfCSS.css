@@ -1,0 +1,201 @@
+
+
+body
+{font-family: verdana, tahoma, arial, sans-serif;
+
+font-size: 10pt;
+
+margin: 0px;
+
+margin-left: 3px;
+
+margin-right: 3px;
+
+padding: 0px;}
+
+ 
+
+p
+{padding-top: 10px;
+
+margin: 0px;}
+
+ 
+
+table.navbar
+
+{font-size: 8pt;
+
+margin: 0px;
+
+padding: 0px;
+
+border: 0px;
+
+font-weight: bold;}
+
+ 
+
+table.menu
+{font-size: 8pt;
+
+margin: 0px;
+
+padding: 0px;
+
+font-weight: bold;}
+
+ 
+
+td.menuNormal
+
+{padding: 0px;
+
+color: white;
+
+font-weight: bold;
+
+vertical-align: top; /* Sets the vertical alignment to the top of the div */
+
+background-color: #0000FF;}
+
+ 
+
+td.menuHover
+
+{padding: 0px;
+
+color: black;
+
+font-weight: bold;
+
+vertical-align: top;
+
+/*remove the following line for drop-down menu with images*/
+
+background-color: lightblue;}
+
+ 
+
+div.menuNormal
+
+{display: none; /* States that this div should not display */
+
+position: static;} /* Tells the element to just flow with everything else */
+
+ 
+
+div.menuHover
+
+{border: 2.5px solid white;
+
+background-color: #0000FF;
+
+display: inline; /* Tells the div to generate an inline box with no line break*/
+
+position: absolute;} /* Positions the element relative to the parent */
+
+ 
+
+a.menuitem:link
+
+{text-decoration: none;
+
+color: white;
+
+padding: 2.5px;
+
+background-color: #0000FF;
+
+border-bottom: 2.5px solid white;
+
+display: block;} /* Display a line break before and after the box */
+
+ 
+
+a.menuitem:visited
+
+{text-decoration: none;
+
+color: white;
+
+padding: 2.5px;
+
+background-color: #0000FF;
+
+border-bottom: 2.5px solid white;
+
+display: block;} /* Display a line break before and after the box */
+
+ 
+
+a.menuitem:hover
+
+{text-decoration: none;
+
+color: black;
+
+padding: 2.5px;
+
+background-color: lightblue;
+
+border-bottom: 2.5px solid white;
+
+display: block;} /* Display a line break before and after the box */
+
+ 
+
+a.menuitem:active
+
+{text-decoration: none;
+
+color: black;
+
+padding: 2.5px;
+
+background-color: lightblue;
+
+border-bottom: 2.5px solid white;
+
+display: block;} /* Display a line break before and after the box */
+
+.ex_highlight #datatable tbody tr.even:hover, #datatable tbody tr.even td.highlighted {
+	background-color: #ECFFB3;
+}
+
+.ex_highlight #datatable tbody tr.odd:hover, #datatable tbody tr.odd td.highlighted {
+	background-color: #E6FF99;
+}
+
+.ex_highlight_row #datatable tr.even:hover {
+	background-color: #ECFFB3;
+}
+
+
+.ex_highlight_row #datatable tr.even:hover td.sorting_1 {
+	background-color: #DDFF75;
+}
+
+.ex_highlight_row #datatable tr.even:hover td.sorting_2 {
+	background-color: #E7FF9E;
+}
+
+.ex_highlight_row #datatable tr.even:hover td.sorting_3 {
+	background-color: #E2FF89;
+}
+
+.ex_highlight_row #datatable tr.odd:hover {
+	background-color: #E6FF99;
+}
+
+.ex_highlight_row #datatable tr.odd:hover td.sorting_1 {
+	background-color: #D6FF5C;
+}
+
+.ex_highlight_row #datatable tr.odd:hover td.sorting_2 {
+	background-color: #E0FF84;
+}
+
+.ex_highlight_row #datatable tr.odd:hover td.sorting_3 {
+	background-color: #DBFF70;
+}
