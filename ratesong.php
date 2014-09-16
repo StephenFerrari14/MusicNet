@@ -97,7 +97,7 @@
 	
 }); 
 	
-    function expand(s)
+    function expand(s) //Used for drop down menu
     {
     $("div.menuNormal").show();
     }
@@ -105,13 +105,11 @@
     {
     $("div.menuNormal").hide();
     }
-    function openOwen(){
-        alert("Owen!");
-    }
     </script>
     </head>
 	<body>
 	
+	<!-- Sign in Form -->
     <div id="signin-form" title="Create new user" style="display:none">
 	<p class="validateTips">All form fields are required.</p>
 		<form>
@@ -124,7 +122,8 @@
 		</form>
 		<p style="color:red;display:none">Incorrect information entered.</p>
 	</div>
-
+	
+	<!-- Search Modal -->
 	<div id="search-modal" title="Advanced Search" style="display:none">
 		<form>
 	        <fieldset>
@@ -137,6 +136,7 @@
 	      </form>
 	</div>
   
+    <!-- Nav Bar -->
     <div id="menu" style="background-color:#DCDCDC;width:100%">
 		<table class="menu" width="120">
 			<tr>
@@ -175,7 +175,7 @@
 	  <div style="display:inline;width:45%;text-align:right;float:right;">
 			<div style="margin-top:10px;display:none">
 							
-				<?php
+				<?php //Login script and checks for cookies for persistent logins
 					  if (isset($_POST["deletecookie"])){
 						@setcookie("username", "", time()-3600, "/php-wrapper/stferrar", "cs445.cs.umass.edu");
 						unset($_COOKIE["username"]);
@@ -233,6 +233,7 @@
 
 	<br>
 
+	<!-- Datatable html init -->
 	<div id="datatable-div" style="width:100%">
 		<table id="datatable" border="1">
 		  <thead>
@@ -259,7 +260,6 @@
 	<br>
 </body>
     <!-- Footer -->
- 
   <footer>
       <hr>
         <div>

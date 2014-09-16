@@ -10,14 +10,8 @@
     <script src="http://cs445.cs.umass.edu/groups/cfr/www/js/jQuery.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"></script>
-    <script src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"></script>
-
     <link href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables.css" rel="stylesheet">
-
-    <!--<link href="js/jquery-ui-1.10.4.custom/css/ui-lightness/jquery-ui-1.10.4.custom.css" rel="stylesheet"> -->
     <link rel="stylesheet" href="http://cs445.cs.umass.edu/groups/cfr/www/js/jquery-ui-1.10.4.custom/css/ui-lightness/jquery-ui-1.10.4.custom.css" >
-	<!--<script src="js/jquery-ui-1.10.4.custom/js/jquery-1.10.2.js"></script>-->
-    <!--<script src="js/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.js"></script>-->
     <script src="http://cs445.cs.umass.edu/groups/cfr/www/js/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.min.js"></script>
 	
 	<style>
@@ -29,7 +23,7 @@
 		}
 		a:visited {color: #000000}
 	</style>
-	<?php
+	<?php //Open a connection
 		$connection = mysql_connect("cs445sql", "stferrar", "EL440stf");
 		  if (!$connection){
 			echo "Database connection unsuccessful";
@@ -41,104 +35,97 @@
     <script>
     $(document).ready(function(){
 		
-	var isSignedIn = false;
+		var isSignedIn = false;
 
-    oTable = $('#datatable').dataTable( {
-        "aaData": [
-          [ "Ryan's Opera","3:00", "Front Row","W"],
-          [ "Scott Rap","3:00", "Grandma Scott","W"],
-          [ "Steve's Rap","3:00", "Greatest White Rapper","W"],
-          [ "N***** Guy","3:00", "Front Row","W"]
-        ],
-        "aoColumns": [
-          { "sTitle": "Song" },
-          { "sTitle": "Album" },
-          { "sTitle": "Artist" },
-		  { "sTitle": "Genre"}
-        ],
-		"bFilter":false,
-		"bInfo":false,
-		"sDom": '<"top">rt<"bottom"><"clear"i>'
-      } );
-	
-	<?php 
-		$connection = mysql_connect("cs445sql", "stferrar", "EL440stf");
-			if (!$connection){
-				echo "Database connection unsuccessful";
-			}
-			if (!mysql_select_db("cfr")){
-				echo "Database selection unsuccessful";
-			}
-		if(isset($_POST["qone"]))
-			$answer1 = intval($_POST["qone"]);
-		else
-			$answer1 = 1;
-		if(isset($_POST["qtwo"]))
-			$answer2 = intval($_POST["qtwo"]);
-		else
-			$answer2 = 1;
-		if(isset($_POST["qthree"]))
-			$answer3 = intval($_POST["qthree"]);
-		else
-			$answer3 = 1;
-		if(isset($_POST["qfour"]))
-			$answer4 = intval($_POST["qfour"]);
-		else
-			$answer4 = 1;
-		if(isset($_POST["qfive"]))
-			$answer5 = intval($_POST["qfive"]);
-		else
-			$answer5 = 1;
-
-		$inputs = array($answer1, $answer2, $answer3, $answer4, $answer5);
-		$genreList = array("country","rock","jazz","hip hop");
-		$genreArray = array(0,0,0,0);
-		for($i = 0; $i < count($inputs); $i++){
-			$selectedanswer = $inputs[$i] - 1;
-			$genreArray[$selectedanswer]++;
-		}
-		$max = 0;
-		$maxIndex = 1;
-		for($x = 0; $x < count($genreArray); $x++){
-			if($genreArray[$x] > $max){
-				$max = $genreArray[$x];
-				$maxIndex = $x;
-			}
-		}
-		$selectedgenre = $genreList[$maxIndex];
+		oTable = $('#datatable').dataTable( {
+			"aaData": [
+			  [ "Ryan's Opera","3:00", "Front Row","W"],
+			  [ "Scott Rap","3:00", "Grandma Scott","W"],
+			  [ "Steve's Rap","3:00", "Greatest White Rapper","W"],
+			  [ "N***** Guy","3:00", "Front Row","W"]
+			],
+			"aoColumns": [
+			  { "sTitle": "Song" },
+			  { "sTitle": "Album" },
+			  { "sTitle": "Artist" },
+			  { "sTitle": "Genre"}
+			],
+			"bFilter":false,
+			"bInfo":false,
+			"sDom": '<"top">rt<"bottom"><"clear"i>'
+		  } );
 		
-		$query = "SELECT S.title, Al.album_name, Ar.artist_name, TW.term  FROM Songs S, Term_Weights TW, Artists Ar, Albums Al WHERE S.artist_id = Ar.artist_id AND S.album_id = Al.album_id AND TW.term ='".$selectedgenre."' AND S.song_id = TW.song_id AND TW.weight > 0.50 ORDER BY RAND() LIMIT 1;";
-		$query = "SELECT S.title, Al.album_name, Ar.artist_name, HTT.term FROM Songs S, HarmonyTermsTable HTT, Artists Ar, Albums Al WHERE S.artist_id = Ar.artist_id AND S.album_id = Al.album_id AND HTT.term ='".$selectedgenre."' AND S.song_id = HTT.song_id AND HTT.weight > 0.50 ORDER BY RAND() LIMIT 1;";
-		$result = mysql_query($query);
-		$row = "";
-		if($result)
-			$row = mysql_fetch_array($result, MYSQL_NUM );
-	?>
-	var results = <?php echo json_encode($row); ?>;
-	var genrestring = results[3];
-	var fixgenre = genrestring.charAt(0).toUpperCase() + genrestring.slice(1);
-	results[3] = fixgenre;
-	oTable.fnClearTable();
-	oTable.fnAddData(results);
-	oTable.fnDraw();
+		<?php //This script gets the results of the test and sends a query to select a song based on answers
+			if(isset($_POST["qone"]))
+				$answer1 = intval($_POST["qone"]);
+			else
+				$answer1 = 1;
+			if(isset($_POST["qtwo"]))
+				$answer2 = intval($_POST["qtwo"]);
+			else
+				$answer2 = 1;
+			if(isset($_POST["qthree"]))
+				$answer3 = intval($_POST["qthree"]);
+			else
+				$answer3 = 1;
+			if(isset($_POST["qfour"]))
+				$answer4 = intval($_POST["qfour"]);
+			else
+				$answer4 = 1;
+			if(isset($_POST["qfive"]))
+				$answer5 = intval($_POST["qfive"]);
+			else
+				$answer5 = 1;
 
-}); 
+			$inputs = array($answer1, $answer2, $answer3, $answer4, $answer5);
+			$genreList = array("country","rock","jazz","hip hop");
+			$genreArray = array(0,0,0,0);
+			for($i = 0; $i < count($inputs); $i++){
+				$selectedanswer = $inputs[$i] - 1;
+				$genreArray[$selectedanswer]++;
+			}
+			$max = 0;
+			$maxIndex = 1;
+			for($x = 0; $x < count($genreArray); $x++){
+				if($genreArray[$x] > $max){
+					$max = $genreArray[$x];
+					$maxIndex = $x;
+				}
+			}
+			$selectedgenre = $genreList[$maxIndex];
+			
+			//Random Song by Genre selecting query
+			$query = "SELECT S.title, Al.album_name, Ar.artist_name, TW.term  FROM Songs S, Term_Weights TW, Artists Ar, Albums Al WHERE S.artist_id = Ar.artist_id AND S.album_id = Al.album_id AND TW.term ='".$selectedgenre."' AND S.song_id = TW.song_id AND TW.weight > 0.50 ORDER BY RAND() LIMIT 1;";
+			$query = "SELECT S.title, Al.album_name, Ar.artist_name, HTT.term FROM Songs S, HarmonyTermsTable HTT, Artists Ar, Albums Al WHERE S.artist_id = Ar.artist_id AND S.album_id = Al.album_id AND HTT.term ='".$selectedgenre."' AND S.song_id = HTT.song_id AND HTT.weight > 0.50 ORDER BY RAND() LIMIT 1;";
+			$result = mysql_query($query);
+			$row = "";
+			if($result)
+				$row = mysql_fetch_array($result, MYSQL_NUM );
+		?>
+		//Display song in Datatable
+		var results = <?php echo json_encode($row); ?>;
+		var genrestring = results[3];
+		var fixgenre = genrestring.charAt(0).toUpperCase() + genrestring.slice(1);
+		results[3] = fixgenre;
+		oTable.fnClearTable();
+		oTable.fnAddData(results);
+		oTable.fnDraw();
+
+	});
 	
-    function expand(s)
+	function expand(s) //Used for drop down menu
     {
-    $("div.menuNormal").show();
+		$("div.menuNormal").show();
     }
     function collapse(s)
     {
-    $("div.menuNormal").hide();
-    }
-    function openOwen(){
-        alert("Owen!");
-    }
+		$("div.menuNormal").hide();
+    }	
     </script>
     </head>
 	<body>
 	
+	<!-- Login Form -->
     <div id="signin-form" title="Create new user" style="display:none">
 	<p class="validateTips">All form fields are required.</p>
 		<form>
@@ -152,6 +139,7 @@
 		<p style="color:red;display:none">Incorrect information entered.</p>
 	</div>
 
+	<!-- Search form -->
 	<div id="search-modal" title="Advanced Search" style="display:none">
 		<form>
 	        <fieldset>
@@ -171,7 +159,8 @@
 		0<input type="range" name="rating" min="0" max="5">5
 	</div>
 	</div>
-  
+	
+	<!-- Nav Bar -->
     <div id="menu" style="background-color:#DCDCDC;width:100%">
 		<table class="menu" width="120">
 			<tr>
@@ -211,6 +200,7 @@
 			<div style="margin-top:10px;display:none">
 							
 				<?php
+				//Script used to check or create cookies for login persistence
 					  if (isset($_POST["deletecookie"])){
 						@setcookie("username", "", time()-3600);
 						unset($_COOKIE["username"]);
@@ -235,8 +225,8 @@
 						}
 					  }
 					  }
-					  if (isset($_COOKIE["username"])){
-				?>
+					if (isset($_COOKIE["username"])){
+					?>
 					<?php
 					  echo "Welcome, " . $_COOKIE["username"] . "!<br><br>\n";
 					  echo "<form method=\"post\" action=\"home.php\">\n";
@@ -267,7 +257,8 @@
     </div>
 
 	<br>
-
+	
+	<!-- Datatable init -->
 	<div id="datatable-div" style="width:100%">
 		<table id="datatable" border="1">
 		  <thead>

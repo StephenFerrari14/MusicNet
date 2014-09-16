@@ -10,14 +10,9 @@
     <script src="http://cs445.cs.umass.edu/groups/cfr/www/js/jQuery.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"></script>
-    <script src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"></script>
 
     <link href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables.css" rel="stylesheet">
-
-    <!--<link href="js/jquery-ui-1.10.4.custom/css/ui-lightness/jquery-ui-1.10.4.custom.css" rel="stylesheet"> -->
     <link rel="stylesheet" href="http://cs445.cs.umass.edu/groups/cfr/www/js/jquery-ui-1.10.4.custom/css/ui-lightness/jquery-ui-1.10.4.custom.css" >
-	<!--<script src="js/jquery-ui-1.10.4.custom/js/jquery-1.10.2.js"></script>-->
-    <!--<script src="js/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.js"></script>-->
     <script src="http://cs445.cs.umass.edu/groups/cfr/www/js/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.min.js"></script>
 	
 	<style>
@@ -26,7 +21,7 @@
     <script>
     $(document).ready(function(){
 	
-	
+		//Questions and answers for Harmony
 		var Q1 = ["What is your favorite season?", "Summer", "Spring", "Fall", "Winter"];
 		var Q2 = ["What would you prefer to have right now?", "Steak", "Tacos", "Ice Cream", "I'm not hungry"];
 		var Q3 = ["On Friday night, what do you prefer to do?", "Go camping.", "Play video games.", "Watch something on TV.", "Go out with my friends."];
@@ -45,11 +40,12 @@
 
 		var questArray = [Q1,Q2,Q3,Q4,Q5,Q6,Q7,Q8,Q9,Q10,Q11,Q12,Q13,Q14,Q15];
 		var displayArray = [0,0,0,0];		
-		for(var j, x, i = questArray.length; i; j = Math.floor(Math.random() * i), x = questArray[--i], questArray[i] = questArray[j], questArray[j] = x);
+		for(var j, x, i = questArray.length; i; j = Math.floor(Math.random() * i), x = questArray[--i], questArray[i] = questArray[j], questArray[j] = x); //Shuffle questions
 		for(var i; i <= 4; i++){
-			displayArray[i] = questArray[i];
+			displayArray[i] = questArray[i]; //Choose 4 questions
 		}
 		
+		//Append questions that the user will answer
 		$("#questions").append(displayArray[0][0] + '<br><input type="radio" name="qone" value="1"/>'+displayArray[0][1]+'<br><input type="radio" name="qone" value="2"/>'+displayArray[0][2]+'<br><input type="radio" name="qone" value="3"/>'+displayArray[0][3]+'<br><input type="radio" name="qone" value="4"/>'+displayArray[0][4]+'<br>');
 		
 		$("#questions").append(displayArray[1][0] + '<br><input type="radio" name="qtwo" value="1"/>'+displayArray[1][1]+'<br><input type="radio" name="qtwo" value="2"/>'+displayArray[1][2]+'<br><input type="radio" name="qtwo" value="3"/>'+displayArray[1][3]+'<br><input type="radio" name="qtwo" value="4"/>'+displayArray[1][4]+'<br>');
@@ -63,18 +59,15 @@
 		$("#questions").append('<input type="submit" value="Submit">');
 	
     }); 
-
-    function expand(s)
+	
+	function expand(s) //Used for drop down menu
     {
-    $("div.menuNormal").show();
+		$("div.menuNormal").show();
     }
     function collapse(s)
     {
-    $("div.menuNormal").hide();
-    }
-      function openOwen(){
-        alert("Owen!");
-      }
+		$("div.menuNormal").hide();
+    }	
     </script>
     </head>
 	<body>
@@ -82,6 +75,7 @@
     Sign In Modal
     </div>
   
+	<!-- Nav Bar -->
     <div id="menu" style="background-color:#DCDCDC;width:100%">
 		<table class="menu" width="120">
 			<tr>
@@ -121,7 +115,7 @@
 		<div style="margin-top:10px">
 			<div style="margin-top:10px;display:none">
 							
-				<?php
+				<?php  //Script used to check or create cookies for login persistence
 					  if (isset($_POST["deletecookie"])){
 						@setcookie("username", "", time()-3600);
 						unset($_COOKIE["username"]);
@@ -178,15 +172,13 @@
     </div>
 
 	<br>
-
+	
+	<!-- Harmony section with questions -->
 	<div id="harmony" style="text-align:center">
 		<div style="width:60%;display:inline">
-		
 			<h3>Hello let me pick a song for you.</h3>
 			<img src="http://newsplies.com/wp-content/uploads/2014/01/Scarlett-Johansson-image.jpg" alt="Super Hot" width="460" height="550">
-		
 		</div>
-		
 	</div>
 	<br>
 	<div>

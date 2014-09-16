@@ -37,97 +37,105 @@
 	?>
     <script>
     $(document).ready(function(){
+			
+		var isSignedIn = false;
+		oTable = $('#datatable').dataTable( { //Datatable init
+			"aaData": [
+			  [ "Ryan's Opera","3:00", "Front Row", "Ryan^2", 4, 2],
+			  [ "Scott Rap","3:00", "Grandma Scott", "Frojee", 5, 20],
+			  [ "Steve's Rap","3:00", "Greatest White Rapper", "Steve", 5, 25]
+			],
+			"aoColumns": [
+			  { "sTitle": "Song"},
+			  { "sTitle": "Duration(sec)", "sClass": "center"},
+			  { "sTitle": "Album" },
+			  { "sTitle": "Artist" },
+			  { "sTitle": "Rating", "sClass": "center" },
+			  { "sTitle": "Times Played", "sClass": "center"}
+			],
+			"aaSorting":[[0, "desc"]],
+			"bFilter":false,
+			"bInfo":false,
+			"sDom": '<"top">rt<"bottom"><"clear"i>'
+		  } );
 		
-	var isSignedIn = false;
+		<?php 	//Script for filling the datatable with search results
+			$input = $_POST["songsearch"];
+			$query = "SELECT S.title, S.duration, Al.album_name, Ar.artist_name, R.rating, P.play_count, S.song_id FROM Songs S, Albums Al, Artists Ar, Rate R, Play P, Users U WHERE U.user_id = 'david_kelly6' AND S.album_id = Al.album_id AND S.artist_id = Ar.artist_id AND S.song_id = R.song_id AND S.song_id = P.song_id AND U.user_id = R.user_id AND U.user_id = P.user_id AND S.title LIKE '%". $input ."%' LIMIT 10";
+			#This is for logged in search
+			#$query = "SELECT S.title, S.duration, Al.album_name, Ar.artist_name, R.rating, P.play_count, S.song_id FROM Songs S, Albums Al, Artists Ar, Rate R, Play P WHERE S.album_id = Al.album_id AND S.artist_id = Ar.artist_id AND S.song_id = R.song_id AND S.song_id = P.song_id AND S.title LIKE '%". $input ."%' LIMIT 10";
+			
+			$result = mysql_query($query);
+			$count = 0;
+			$rows = array(
+			array("","","","","","",""),
+			array("","","","","","",""),
+			array("","","","","","",""),
+			array("","","","","","",""),
+			array("","","","","","",""),
+			array("","","","","","",""),
+			array("","","","","","","")
+			); 
+			
+			while($row = mysql_fetch_array($result, MYSQL_NUM )){
+				$rows[$count][0] = $row[0];
+				$rows[$count][1] = $row[1];
+				$rows[$count][2] = $row[2];
+				$rows[$count][3] = $row[3];
+				$rows[$count][4] = $row[4];
+				$rows[$count][5] = $row[5];
+				$rows[$count][6] = $row[6];
+				$count++;
+			} 
+			$count = 0;
+			
+		?>
+		var results = <?php echo json_encode($rows); ?>;
 
-    oTable = $('#datatable').dataTable( {
-        "aaData": [
-          [ "Ryan's Opera","3:00", "Front Row", "Ryan^2", 4, 2],
-          [ "Scott Rap","3:00", "Grandma Scott", "Frojee", 5, 20],
-          [ "Steve's Rap","3:00", "Greatest White Rapper", "Steve", 5, 25]
-        ],
-        "aoColumns": [
-          { "sTitle": "Song"},
-          { "sTitle": "Duration(sec)", "sClass": "center"},
-          { "sTitle": "Album" },
-          { "sTitle": "Artist" },
-          { "sTitle": "Rating", "sClass": "center" },
-		  { "sTitle": "Times Played", "sClass": "center"}
-        ],
-		"aaSorting":[[0, "desc"]],
-		"bFilter":false,
-		"bInfo":false,
-		"sDom": '<"top">rt<"bottom"><"clear"i>'
-      } );
-	
-	<?php 	
-		$input = $_POST["songsearch"];
-		$query = "SELECT S.title, S.duration, Al.album_name, Ar.artist_name, R.rating, P.play_count, S.song_id FROM Songs S, Albums Al, Artists Ar, Rate R, Play P, Users U WHERE U.user_id = 'david_kelly6' AND S.album_id = Al.album_id AND S.artist_id = Ar.artist_id AND S.song_id = R.song_id AND S.song_id = P.song_id AND U.user_id = R.user_id AND U.user_id = P.user_id AND S.title LIKE '%". $input ."%' LIMIT 10";
-		#This is for logged in search
-		#$query = "SELECT S.title, S.duration, Al.album_name, Ar.artist_name, R.rating, P.play_count, S.song_id FROM Songs S, Albums Al, Artists Ar, Rate R, Play P WHERE S.album_id = Al.album_id AND S.artist_id = Ar.artist_id AND S.song_id = R.song_id AND S.song_id = P.song_id AND S.title LIKE '%". $input ."%' LIMIT 10";
+		oTable.fnClearTable();
+		oTable.fnAddData(results); //Refresh table
+		oTable.fnDraw();
 		
-		$result = mysql_query($query);
-		$count = 0;
-		$rows = array(
-		array("","","","","","",""),
-		array("","","","","","",""),
-		array("","","","","","",""),
-		array("","","","","","",""),
-		array("","","","","","",""),
-		array("","","","","","",""),
-		array("","","","","","","")
-		); 
-		
-		while($row = mysql_fetch_array($result, MYSQL_NUM )){
-			$rows[$count][0] = $row[0];
-			$rows[$count][1] = $row[1];
-			$rows[$count][2] = $row[2];
-			$rows[$count][3] = $row[3];
-			$rows[$count][4] = $row[4];
-			$rows[$count][5] = $row[5];
-			$rows[$count][6] = $row[6];
-			$count++;
-		} 
-		$count = 0;
-		
-	?>
-	var results = <?php echo json_encode($rows); ?>;
-
-	oTable.fnClearTable();
-	oTable.fnAddData(results);
-	oTable.fnDraw();
-	
-	$("#datatable tbody td").click(function(event) {
-		console.log("Clicked");
-		$(oTable.fnSettings().aoData).each(function (){
-			$(this.nTr).removeClass('row_selected');
+		$("#datatable tbody td").click(function(event) { //Shows song features when clicked on a certain row
+			console.log("Clicked");
+			$(oTable.fnSettings().aoData).each(function (){
+				$(this.nTr).removeClass('row_selected');
+			});
+			$(event.target.parentNode).addClass('row_selected');
+			
+			var aPos = oTable.fnGetPosition( this );
+				var aData = oTable.fnGetData( aPos[0] );
+				console.log(aPos);
+				console.log(aData);
+			$("#selected-song").text(aData[0]);
+			$("#songid").text(aData[6]);
+			$("#songid").val(aData[6]);
+			$("#songid2").text(aData[6]);
+			$("#songid2").val(aData[6]);
 		});
-		$(event.target.parentNode).addClass('row_selected');
 		
-		var aPos = oTable.fnGetPosition( this );
-			var aData = oTable.fnGetData( aPos[0] );
-			console.log(aPos);
-			console.log(aData);
-		$("#selected-song").text(aData[0]);
-		$("#songid").text(aData[6]);
-		$("#songid").val(aData[6]);
-		$("#songid2").text(aData[6]);
-		$("#songid2").val(aData[6]);
-	});
+		$("#rater").change(function () {                    
+		   var rateValue = $('#rater').val();
+		   $("#rating").text(rateValue);
+		   $("#rating").val(rateValue);
+		});
+	}); 
 	
-	$("#rater").change(function () {                    
-	   var rateValue = $('#rater').val();
-	   $("#rating").text(rateValue);
-	   $("#rating").val(rateValue);
-	});
-}); 
-	
+	function expand(s) //Used for drop down menu
+    {
+		$("div.menuNormal").show();
+    }
+    function collapse(s)
+    {
+		$("div.menuNormal").hide();
+    }	
     </script>
     </head>
 	<body>
 	
+	<!-- Login field -->
     <div id="signin-form" title="Create new user" style="display:none">
-	<p class="validateTips">All form fields are required.</p>
+		<p class="validateTips">All form fields are required.</p>
 		<form>
 		<fieldset>
 			<label for="name">Username: </label>
@@ -138,7 +146,8 @@
 		</form>
 		<p style="color:red;display:none">Incorrect information entered.</p>
 	</div>
-
+	
+	<!-- Search Field -->
 	<div id="search-modal" title="Advanced Search" style="display:none">
 		<form>
 	        <fieldset>
@@ -150,7 +159,8 @@
 	        </fieldset>
 	      </form>
 	</div>
-  
+    
+	<!-- Nav Bar -->
     <div id="menu" style="background-color:#DCDCDC;width:100%">
 		<table class="menu" width="120">
 			<tr>
@@ -189,7 +199,7 @@
 	  <div style="display:inline;width:45%;text-align:right;float:right;">
 			<div style="margin-top:10px;display:none;">
 							
-				<?php
+				<?php //Script for login and cookie creation
 					  if (isset($_POST["deletecookie"])){
 						@setcookie("username", "", time()-3600, "/php-wrapper/stferrar", "cs445.cs.umass.edu");
 						unset($_COOKIE["username"]);
@@ -246,7 +256,8 @@
     </div>
 
 	<br>
-
+	
+	<!-- Datatable html -->
 	<div id="datatable-div" style="width:100%">
 		<table id="datatable" border="1">
 		  <thead>
@@ -271,10 +282,11 @@
 	</div>
 
 	<br>
-		<div>
-			Selected Song: <p id="selected-song" style="display:inline"></p>
-		<br>
-		</div>
+	<!-- Temp music player -->
+	<div>
+		Selected Song: <p id="selected-song" style="display:inline"></p>
+	<br>
+	</div>
 	<div id="toolbar" style="margin-top:10px; text-align:center" class="ui-widget-header ui-corner-all">
 		<form method="POST" action="playsong.php">
 			<input type="hidden" id="songid" name="songid" value="" />
